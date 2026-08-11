@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>입자 클린 경매 - 실시간 멀티 디바이스 웹앱</title>
+    <title>입자 문제 투자 - 실시간 멀티 디바이스 웹앱</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Firebase Compat Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -46,6 +50,7 @@
 </head>
 <body class="p-3 md:p-5 flex flex-col justify-between min-h-screen">
 
+    <!-- 상단 헤더 / 네비게이션 바 -->
     <header class="glass-panel rounded-2xl p-3.5 mb-3 flex flex-wrap justify-between items-center shadow-lg border-b border-indigo-500/20">
         <div class="flex items-center gap-3">
             <div class="bg-indigo-600/30 p-2.5 rounded-xl border border-indigo-400/30 text-indigo-400 text-xl">
@@ -53,12 +58,13 @@
             </div>
             <div>
                 <h1 class="text-lg md:text-xl font-black tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-sky-300 to-emerald-300 font-title">
-                    입자 클린 경매 <span id="gameModeBadgeHeader" class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/30 text-indigo-300 border border-indigo-400/30 font-sans">실시간 미리보기</span>
+                    입자 문제 투자 <span id="gameModeBadgeHeader" class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/30 text-indigo-300 border border-indigo-400/30 font-sans">실시간 미리보기</span>
                 </h1>
-                <p class="text-xs text-slate-400">중1 과학 [입자의 운동과 상태 변화] 게이미피케이션 수업 도구</p>
+                <p class="text-xs text-slate-400">중1 과학 [입자의 운동, 확산과 증발, 물질의 세 가지 상태] 게이미피케이션 수업 도구</p>
             </div>
         </div>
 
+        <!-- 우측 상단 상태 버튼 -->
         <div class="flex items-center gap-2 mt-2 sm:mt-0">
             <div id="roomPinBadge" class="hidden px-3 py-1 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono font-bold text-sm">
                 📌 PIN: <span id="pinDisplay" class="text-base font-black">---</span>
@@ -74,13 +80,17 @@
         </div>
     </header>
 
+    <!-- 메인 동적 화면 컨테이너 -->
     <main id="appContainer" class="flex-grow flex flex-col justify-center">
-        </main>
+        <!-- JavaScript로 동적 화면 전환 -->
+    </main>
 
+    <!-- 푸터 -->
     <footer class="mt-4 text-center text-xs text-slate-500 py-1.5 border-t border-slate-800/60">
-        수업디자인 연수 오전 강의용 | 중학교 1학년 과학 [Q-E-F-S 전략 경매 시스템]
+        수업디자인 연수 오전 강의용 | 중학교 1학년 과학 [입자 문제 투자 시스템]
     </footer>
 
+    <!-- 보안관 찬스 팝업 모달 -->
     <div id="sheriffModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="glass-panel bg-slate-900/90 border-2 border-amber-500/50 rounded-3xl p-6 md:p-8 max-w-lg w-full glow-effect relative transform transition-all duration-300 scale-95 opacity-0" id="sheriffModalCard">
             <button onclick="closeSheriffModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
@@ -118,6 +128,7 @@
         </div>
     </div>
 
+    <!-- 파산 학생 회생 퀴즈 모달 -->
     <div id="rescueQuizModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="glass-panel bg-slate-900/90 border-2 border-emerald-500/50 rounded-3xl p-6 md:p-8 max-w-lg w-full glow-effect relative space-y-4">
             <div class="flex items-center gap-3 text-emerald-400">
@@ -132,7 +143,7 @@
             <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-3">
                 <div class="text-xs text-amber-400 font-bold"><i class="fa-solid fa-circle-question"></i> 개념 확인 문제</div>
                 <p class="text-sm font-semibold text-slate-100" id="rescueQuizStatement">
-                    상태 변화가 일어날 때 물질을 이루는 입자의 [크기와 종류]는 변한다.
+                    액체 표면에서 입자가 공기 중으로 날아가는 현상을 증발이라고 한다. (O/X)
                 </p>
             </div>
 
@@ -147,10 +158,10 @@
         </div>
     </div>
 
+    <!-- 스크립트 메인 로직 -->
     <script>
-        // 전역 게임 상태
         window.gameState = {
-            role: null, // 'host' | 'client'
+            role: null,
             roomId: null,
             myTeamId: null,
             roomData: null,
@@ -168,7 +179,7 @@
         window.auth = null;
         window.roomUnsubscribe = null;
         window.hostPingInterval = null;
-        window.appId = 'particle-clean-auction';
+        window.appId = 'particle-investment-room';
 
         let resolveAuthPromise;
         window.authReady = new Promise((resolve) => {
@@ -180,79 +191,142 @@
             return window.db.collection('artifacts').doc(window.appId).collection('public').doc('data').collection('rooms').doc(pin);
         };
 
-        // 과학 퀴즈 문항 데이터베이스
+        // 입자 감식반, 증발, 물질의 상태 관련 핵심 15문항 데이터베이스
         window.questionBank = [
             {
                 id: 1,
                 category: "입자의 운동",
-                statement: "물 위에 떨어진 물감이 스스로 퍼져 나가는 확산 현상은 입자가 모든 방향으로 움직이기 때문에 일어난다.",
+                statement: "물질을 이루는 입자는 가만히 정지해 있지 않고 스스로 끊임없이 운동한다.",
                 isTrue: true,
-                sheriffHint: "포인트: 확산과 증발은 외력이 없어도 '입자의 자발적 운동'으로 발생합니다.",
-                concept: "입자는 스스로 끊임없이 운동하며, 온도나 기체/액체 상태에 따라 운동 속도가 달라집니다.",
-                explanation: "참(True)! 확산은 입자가 스스로 모든 방향으로 움직여 다른 물질 속으로 퍼져나가는 현상입니다."
+                sheriffHint: "포인트: 입자의 기본 성질 중 자발적인 움직임에 대해 생각해 보세요.",
+                concept: "물질을 이루는 입자는 스스로 끊임없이 운동합니다.",
+                explanation: "참(True)! 물질을 이루는 입자는 스스로 끊임없이 운동하며 확산이나 증발의 원동력이 됩니다."
             },
             {
                 id: 2,
-                category: "입자의 운동",
-                statement: "젖은 빨래가 마르는 증발 현상은 액체 표면뿐만 아니라 액체 내부에서도 입자가 기체로 변해 날아가는 현상이다.",
-                isTrue: false,
-                sheriffHint: "포인트: '표면만' 기화하는가, '내부 전체에서' 기화하는가의 차이를 구분하세요!",
-                concept: "표면에서만 기체로 변하는 것은 [증발], 액체 표면과 내부 모두에서 일어나는 것은 [끓음]입니다.",
-                explanation: "거짓(False)! 액체 표면에서만 입자가 기체로 변하는 것은 '증발'이고, 내부에서도 기포가 생기며 일어나는 것은 '끓음'입니다."
+                category: "확산 현상",
+                statement: "물 위에 떨어진 초콜릿 색소가 시간이 지남에 따라 사방으로 퍼져 나가는 현상은 확산이다.",
+                isTrue: true,
+                sheriffHint: "포인트: 입자가 사방으로 퍼져나가는 현상의 이름을 떠올려 보세요.",
+                concept: "입자의 자발적 운동으로 물질이 사방으로 퍼져 나가는 현상을 확산이라고 합니다.",
+                explanation: "참(True)! 색소나 향수가 사방으로 퍼져 나가는 현상은 모두 입자의 확산에 해당합니다."
             },
             {
                 id: 3,
-                category: "상태 변화와 입자",
-                statement: "얼음이 녹아 물이 되는 현상을 액화라고 한다.",
+                category: "확산 현상",
+                statement: "확산 현상이 일어날 때 입자는 오직 한 방향(앞쪽)으로만 이동한다.",
                 isTrue: false,
-                sheriffHint: "포인트: 액화, 기화, 융해, 응고, 승화 중 골라보세요.",
-                concept: "고체가 액체로 변하는 현상은 융해입니다. 기체가 액체로 변하는 현상을 액화라고 합니다.",
-                explanation: "거짓(False)! 고체가 액체로 변하는 현상은 융해입니다. 기체가 액체로 변하는 현상을 액화라고 합니다."
+                sheriffHint: "포인트: 향수를 뿌렸을 때 냄새가 어느 방향으로 퍼지는지 생각해 보세요.",
+                concept: "입자는 특정한 한 방향이 아니라 모든 방향(사방)으로 퍼져 나갑니다.",
+                explanation: "거짓(False)! 확산은 입자가 특정한 한 방향이 아니라 모든 방향(사방)으로 골고루 퍼져 나가는 현상입니다."
             },
             {
                 id: 4,
-                category: "입자의 운동",
-                statement: "증발 현상은 액체의 표면적이 넓을수록 잘 일어난다.",
-                isTrue: true,
-                sheriffHint: "포인트: 증발은 액체의 '표면'에서 액체가 기체로 변해 날아가는 현상입니다.",
-                concept: "액체의 표면에서만 증발이 일어나므로, 표면적이 넓을수록 증발할 수 있는 면적이 넓어집니다.",
-                explanation: "참(True)! 액체의 표면에서만 증발이 일어나므로, 표면적이 넓을수록 증발할 수 있는 면적이 넓어집니다."
+                category: "확산 조건",
+                statement: "확산 현상은 기체 물질에서만 일어나고 액체 물질에서는 절대 일어나지 않는다.",
+                isTrue: false,
+                sheriffHint: "포인트: 물속에 잉크나 색소가 퍼지는 현상을 떠올려 보세요.",
+                concept: "확산은 기체뿐만 아니라 액체 속에서도 일어납니다.",
+                explanation: "거짓(False)! 확산은 기체(방귀, 향수)뿐만 아니라 액체(물감, 잉크) 속에서도 활발하게 일어납니다."
             },
             {
                 id: 5,
-                category: "물질의 상태 변화",
-                statement: "고체 드라이아이스가 점점 작아지는 현상은 승화입니다.",
+                category: "증발 현상",
+                statement: "젖은 빨래가 마르거나 손 소독제를 바르고 시간이 지나면 마르는 현상은 '증발'이다.",
                 isTrue: true,
-                sheriffHint: "포인트: 액화, 기화, 융해, 응고, 승화 중 골라보세요.",
-                concept: "고체가 기체로, 기체가 고체로 변하는 것을 뜻하는 용어는 모두 같습니다.",
-                explanation: "참(True)! 고체가 기체로, 기체가 고체로 변하는 것을 뜻하는 용어는 모두 승화입니다."
+                sheriffHint: "포인트: 액체 상태의 물질이 끓지 않고 공기 중으로 날아가는 현상입니다.",
+                concept: "액체 표면에서 입자가 기체가 되어 공기 중으로 날아가는 현상을 증발이라고 합니다.",
+                explanation: "참(True)! 액체 표면의 입자가 스스로 기체로 변해 공기 중으로 날아가는 것은 증발 현상입니다."
             },
             {
                 id: 6,
-                category: "상태 변화 용어",
-                statement: "추운 겨울날 실내 창문 안쪽에 물방울이 서리는 현상은 기체가 액체로 변하는 '액화' 현상이다.",
-                isTrue: true,
-                sheriffHint: "포인트: 따뜻한 수증기(기체)가 차가운 유리창(액체)에 닿을 때의 변화를 확인하세요.",
-                concept: "기체가 열을 방출하여 액체로 변하는 현상을 [액화]라고 합니다.",
-                explanation: "참(True)! 공기 중의 수증기가 차가운 유리창을 만나 열을 잃고 물방울로 변하는 것은 '액화'입니다."
+                category: "증발과 끓음",
+                statement: "증발은 액체의 내부와 표면 모든 곳에서 동시에 기포가 발생하며 일어난다.",
+                isTrue: false,
+                sheriffHint: "포인트: 냄비에 물을 끓일 때와 젖은 빨래가 마를 때의 차이를 비교해 보세요.",
+                concept: "내부와 표면 모두에서 기화하는 것은 '끓음'이며, 증발은 '표면'에서만 일어납니다.",
+                explanation: "거짓(False)! 내부와 표면 모두에서 일어나는 것은 '끓음'이고, 증발은 오직 액체 '표면'에서만 일어납니다."
             },
             {
                 id: 7,
-                category: "입자의 운동",
-                statement: "확산 현상은 공기가 없는 우주에서도 일어납니다.",
-                isTrue: true,
-                sheriffHint: "포인트: 확산 현상은 입자가 스스로 운동하기 때문에 일어납니다.",
-                concept: "공기가 없는 우주에서도 물질을 이루는 입자는 항상 스스로 운동합니다.",
-                explanation: "참(True)! 공기가 없는 우주에서도 물질을 이루는 입자는 항상 스스로 운동하므로, 확산 현상은 일어납니다."
+                category: "증발 요인",
+                statement: "손 소독제를 거름종이에 얇게 펴 바를 때보다 뭉쳐 놓을 때 증발이 더 빨리 일어난다.",
+                isTrue: false,
+                sheriffHint: "포인트: 빨래를 갤 때와 널어놓을 때 어느 쪽이 더 빨리 마를까요?",
+                concept: "증발은 액체의 표면적이 넓을수록 더 잘 일어납니다.",
+                explanation: "거짓(False)! 증발은 표면적이 넓을수록 공기와 닿는 면적이 넓어져 더 빨리 일어납니다."
             },
             {
                 id: 8,
-                category: "물질의 상태 변화",
-                statement: "물이 얼어 얼음이 될 때(응고), 입자들의 운동은 점점 둔해진다.",
+                category: "물질의 상태 (고체)",
+                statement: "돌, 나무, 얼음 같은 고체 상태의 물질은 단단하며 모양과 부피가 모두 일정하다.",
+                isTrue: true,
+                sheriffHint: "포인트: 고체의 기본적인 물리적 특징을 확인하세요.",
+                concept: "고체는 단단하고 모양과 부피가 일정하게 유지됩니다.",
+                explanation: "참(True)! 고체는 입자 사이의 거리가 매우 가깝고 배열이 규칙적이어서 모양과 부피가 일정합니다."
+            },
+            {
+                id: 9,
+                category: "물질의 상태 (액체)",
+                statement: "물이나 주스 같은 액체 상태의 물질은 담는 용기에 따라 모양은 변하지만 부피는 일정하다.",
+                isTrue: true,
+                sheriffHint: "포인트: 컵에 담긴 물을 넓은 그릇에 옮겨 담았을 때 부피와 모양의 변화를 생각해보세요.",
+                concept: "액체는 흐를 수 있고 용기에 따라 모양이 변하지만 부피는 일정합니다.",
+                explanation: "참(True)! 액체는 담는 그릇에 따라 모양이 바뀌지만 전체 부피는 일정하게 유지됩니다."
+            },
+            {
+                id: 10,
+                category: "물질의 상태 (기체)",
+                statement: "공기나 수증기 같은 기체 상태의 물질은 담는 용기에 따라 모양과 부피가 모두 쉽게 변한다.",
+                isTrue: true,
+                sheriffHint: "포인트: 풍선이나 주사기에 공기를 넣었을 때의 성질을 떠올려 보세요.",
+                concept: "기체는 퍼져 나갈 수 있으며 용기에 따라 모양과 부피가 모두 변합니다.",
+                explanation: "참(True)! 기체는 입자 사이의 거리가 매우 멀어 담는 용기에 가득 차며 모양과 부피가 모두 변합니다."
+            },
+            {
+                id: 11,
+                category: "입자 모형과 상태",
+                statement: "고체 상태는 입자들이 규칙적으로 매우 촘촘하게 배열되어 거의 제자리에서 진동만 한다.",
+                isTrue: true,
+                sheriffHint: "포인트: 고체 입자의 배열 상태와 운동 모습을 상상해 보세요.",
+                concept: "고체의 입자는 규칙적으로 배열되어 있고 입자 사이의 거리가 매우 가깝습니다.",
+                explanation: "참(True)! 고체는 입자 간격이 좁고 단단하게 고정되어 있어 제자리 진동만 합니다."
+            },
+            {
+                id: 12,
+                category: "입자 모형과 상태",
+                statement: "기체 상태는 입자 사이의 빈 공간(거리)이 매우 넓어 압축성(부피 변화)이 크다.",
+                isTrue: true,
+                sheriffHint: "포인트: 주사기에 공기를 가득 넣고 피스톤을 누를 때 어떤 일이 일어나는지 생각해 보세요.",
+                concept: "기체는 입자 사이의 빈 공간이 넓어 외부 압력에 따라 부피가 쉽게 줄어듭니다.",
+                explanation: "참(True)! 기체는 입자 사이의 거리가 매우 멀어 압력을 가하면 부피가 쉽게 줄어드는 특징이 있습니다."
+            },
+            {
+                id: 13,
+                category: "입자의 운동과 온도",
+                statement: "온도가 높아질수록 물질을 이루는 입자의 운동 속도는 더 느려진다.",
                 isTrue: false,
-                sheriffHint: "포인트: 얼음과 물 중 어떤 상태일 때 입자 운동이 더 활발할까요?",
-                concept: "고체는 입자 운동이 둔하고 입자간의 거리가 매우 좁으며, 액체는 입자 운동이 비교적 활발합니다.",
-                explanation: "거짓(False)! 고체는 입자 운동이 둔하고 입자간의 거리가 매우 좁으며, 액체는 입자 운동이 비교적 활발합니다."
+                sheriffHint: "포인트: 따뜻한 물과 차가운 물에 물감을 떨어뜨렸을 때 어느 쪽이 더 빨리 퍼질까요?",
+                concept: "온도가 높을수록 입자의 운동이 더 활발해지고 빨라집니다.",
+                explanation: "거짓(False)! 온도가 높을수록 입자들의 운동 에너지가 커져서 운동 속도가 더 빠릅니다."
+            },
+            {
+                id: 14,
+                category: "확산 속도",
+                statement: "확산 현상은 온도가 높을수록, 그리고 입자의 질량이 가벼울수록 더 빠르게 일어난다.",
+                isTrue: true,
+                sheriffHint: "포인트: 뜨거운 국물 속에서 냄새가 더 빨리 퍼지는 이유를 생각해 보세요.",
+                concept: "온도가 높고 가벼울수록 입자 운동이 활발하여 확산이 빠르게 진행됩니다.",
+                explanation: "참(True)! 온도가 높고 입자가 가벼울수록 확산 속도가 빨라집니다."
+            },
+            {
+                id: 15,
+                category: "증발과 기온",
+                statement: "빨래는 기온이 높고, 바람이 잘 불며, 습도가 낮을 때 가장 잘 마른다.",
+                isTrue: true,
+                sheriffHint: "포인트: 화창하고 바람 부는 날 빨래가 잘 마르는 조건을 떠올려 보세요.",
+                concept: "기온이 높고, 바람이 불고, 습도가 낮을수록 증발이 잘 일어납니다.",
+                explanation: "참(True)! 온도 높음, 바람 붊, 습도 낮음은 증발(기화)을 촉진하는 핵심 조건입니다."
             }
         ];
 
@@ -300,6 +374,19 @@
                 console.warn("Firebase 초기화 중 경고:", err);
             } finally {
                 if (resolveAuthPromise) resolveAuthPromise();
+            }
+
+            var savedPin = localStorage.getItem('particle_investment_pin');
+            if (savedPin && window.db) {
+                try {
+                    var docSnap = await window.getRoomDocRef(savedPin).get();
+                    if (docSnap.exists) {
+                        await window.reconnectHostRoom(savedPin);
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("Auto reconnect failed:", e);
+                }
             }
 
             window.renderRoleSelection();
@@ -357,7 +444,7 @@
         };
 
         window.exitToHome = function() {
-            if (confirm("메인 화면으로 돌아가시겠습니까? (진행 중인 경매 정보는 보존됩니다)")) {
+            if (confirm("메인 화면으로 돌아가시겠습니까? (진행 중인 투자 정보는 보존됩니다)")) {
                 if (window.hostPingInterval) clearInterval(window.hostPingInterval);
                 
                 if (window.gameState.role === 'host' && window.db && window.gameState.roomId) {
@@ -376,13 +463,13 @@
             }
         };
 
-        // 1. 역할 선택 랜딩 페이지
         window.renderRoleSelection = function() {
-            var savedPin = localStorage.getItem('particle_auction_host_pin');
+            var savedPin = localStorage.getItem('particle_investment_pin');
             var container = document.getElementById('appContainer');
 
             container.innerHTML = `
                 <div class="max-w-4xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+                    <!-- 교사 모드 카드 -->
                     <div class="glass-panel rounded-3xl p-6 md:p-8 glow-effect flex flex-col justify-between space-y-6 border border-indigo-500/30 hover:border-indigo-400 transition">
                         <div class="space-y-4">
                             <div class="w-14 h-14 rounded-2xl bg-indigo-600/30 border border-indigo-400/40 text-indigo-300 flex items-center justify-center text-2xl">
@@ -390,7 +477,7 @@
                             </div>
                             <div>
                                 <h2 class="text-2xl font-black font-title text-indigo-100">🖥️ 교사 화면 (전면 스크린)</h2>
-                                <p class="text-xs text-slate-300 mt-1">전자칠판에 방 PIN을 띄우고, 학생들의 입장 및 입찰 제출을 실시간 제어합니다.</p>
+                                <p class="text-xs text-slate-300 mt-1">전자칠판에 방 PIN을 띄우고, 학생들의 입장 및 문제 투자를 실시간 제어합니다.</p>
                             </div>
 
                             <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-700/60 space-y-3">
@@ -420,25 +507,25 @@
 
                         <div class="space-y-3">
                             <button onclick="setupHostRoom()" class="w-full py-3.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-black rounded-2xl shadow-lg transition font-title text-base flex items-center justify-center gap-2">
-                                <span>새 교사 경매방 생성하기</span>
+                                <span>새 교사 투자방 생성하기</span>
                                 <i class="fa-solid fa-plus"></i>
                             </button>
 
                             <hr class="border-slate-800/80 my-2">
 
-                            <div class="bg-amber-950/20 border border-amber-500/40 p-3.5 rounded-2xl space-y-2">
-                                <label class="block text-xs font-bold text-amber-300 flex items-center gap-1">
+                            <div class="bg-indigo-950/20 border border-indigo-500/40 p-3.5 rounded-2xl space-y-2">
+                                <label class="block text-xs font-bold text-indigo-300 flex items-center gap-1">
                                     <i class="fa-solid fa-rotate-left"></i> 기존 방 PIN 번호로 교사 재접속
                                 </label>
                                 <div class="flex gap-2">
-                                    <input type="text" id="hostReconnectPinInput" placeholder="방 PIN 4자리" maxlength="4" class="w-1/2 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-center font-mono font-bold text-amber-300 focus:outline-none focus:border-amber-400 text-sm">
-                                    <button onclick="reconnectHostByInputPin()" class="w-1/2 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl transition text-xs flex items-center justify-center gap-1 shadow">
+                                    <input type="text" id="hostReconnectPinInput" placeholder="방 PIN 4자리" maxlength="4" class="w-1/2 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-center font-mono font-bold text-amber-300 focus:outline-none focus:border-indigo-400 text-sm">
+                                    <button onclick="reconnectHostByInputPin()" class="w-1/2 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-black rounded-xl transition text-xs flex items-center justify-center gap-1 shadow">
                                         <span>교사 재입장</span>
                                         <i class="fa-solid fa-right-to-bracket"></i>
                                     </button>
                                 </div>
                                 ${savedPin ? `
-                                    <button onclick="reconnectHostRoom('${savedPin}')" class="w-full py-2 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-bold rounded-xl transition text-xs flex items-center justify-center gap-1.5">
+                                    <button onclick="reconnectHostRoom('${savedPin}')" class="w-full py-2 bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/40 text-indigo-300 font-bold rounded-xl transition text-xs flex items-center justify-center gap-1.5">
                                         <span>최근 방 (PIN: ${savedPin}) 바로 복구</span>
                                     </button>
                                 ` : ''}
@@ -446,6 +533,7 @@
                         </div>
                     </div>
 
+                    <!-- 학생 접속 카드 -->
                     <div class="glass-panel rounded-3xl p-6 md:p-8 glow-effect flex flex-col justify-between space-y-6 border border-emerald-500/30 hover:border-emerald-400 transition">
                         <div class="space-y-4">
                             <div class="w-14 h-14 rounded-2xl bg-emerald-600/30 border border-emerald-400/40 text-emerald-300 flex items-center justify-center text-2xl">
@@ -471,7 +559,7 @@
                             </div>
                         </div>
                         <button onclick="joinClientRoom()" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black rounded-2xl shadow-lg transition font-title text-base flex items-center justify-center gap-2">
-                            <span>경매 참가하기</span>
+                            <span>문제 투자 참여하기</span>
                             <i class="fa-solid fa-right-to-bracket"></i>
                         </button>
                     </div>
@@ -596,7 +684,7 @@
                         window.gameState.roomId = pin;
                         window.gameState.roomData = docSnap.data();
 
-                        localStorage.setItem('particle_auction_host_pin', pin);
+                        localStorage.setItem('particle_investment_pin', pin);
 
                         document.getElementById('pinDisplay').innerText = pin;
                         document.getElementById('roomPinBadge').classList.remove('hidden');
@@ -616,7 +704,7 @@
 
                         window.startHostHeartbeat(pin);
                         window.renderHostScreen();
-                        window.showToast(`🎉 PIN ${pin}번 경매방에 교사 권한으로 복귀했습니다!`);
+                        window.showToast(`🎉 PIN ${pin}번 투자방에 교사 권한으로 복귀했습니다!`);
                         return;
                     }
                 } catch (err) {
@@ -634,7 +722,7 @@
             window.gameState.role = 'host';
             window.gameState.roomId = pin;
 
-            localStorage.setItem('particle_auction_host_pin', pin);
+            localStorage.setItem('particle_investment_pin', pin);
 
             document.getElementById('pinDisplay').innerText = pin;
             document.getElementById('roomPinBadge').classList.remove('hidden');
@@ -657,7 +745,7 @@
                     joined: false,
                     sheriffModalData: null,
                     rescueRequested: false,
-                    rescueUsed: false // 📌 구제 기회 1회 제한 플래그
+                    rescueUsed: false
                 };
             }
 
@@ -728,11 +816,11 @@
                         <div class="text-xs sm:text-sm font-bold text-indigo-300 tracking-wider uppercase mb-1">
                             <i class="fa-solid fa-wifi mr-1.5 animate-pulse text-emerald-400"></i>학생 기기 접속용 방 PIN 번호
                         </div>
-                        <div class="text-6xl sm:text-8xl font-black font-mono tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 my-2 drop-shadow-lg">
+                        <div class="text-6xl sm:text-8xl font-black font-mono tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-sky-300 to-emerald-300 my-2 drop-shadow-lg">
                             ${data.roomId}
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300">
-                            학생들은 오른쪽 <span class="text-emerald-300 font-bold">'학생 접속'</span>에서 PIN 번호 <span class="font-bold text-amber-300 font-mono text-base">${data.roomId}</span>와(과) 본인 번호를 선택하여 입장하세요.
+                            학생들은 오른쪽 <span class="text-emerald-300 font-bold">'학생 접속'</span>에서 PIN 번호 <span class="font-bold text-indigo-300 font-mono text-base">${data.roomId}</span>와(과) 본인 번호를 선택하여 입장하세요.
                         </p>
 
                         <div class="mt-4 pt-4 border-t border-slate-700/50 flex flex-wrap justify-between items-center gap-3">
@@ -782,9 +870,9 @@
                         </div>
                     </div>
 
-                    <button onclick="startHostGame()" class="w-full py-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 hover:from-emerald-400 hover:to-indigo-500 text-slate-950 font-black rounded-2xl shadow-xl transition font-title text-lg flex items-center justify-center gap-3">
+                    <button onclick="startHostGame()" class="w-full py-4 bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-600 hover:from-indigo-400 hover:to-emerald-500 text-white font-black rounded-2xl shadow-xl transition font-title text-lg flex items-center justify-center gap-3">
                         <i class="fa-solid fa-play text-xl animate-bounce"></i>
-                        <span>입자 클린 경매 시작하기 (문항 1 진행)</span>
+                        <span>입자 문제 투자 시작하기 (문항 1 진행)</span>
                     </button>
                 </div>
             `;
@@ -842,12 +930,12 @@
                     <div class="glass-panel rounded-2xl p-4 md:p-5 relative overflow-hidden border-2 border-indigo-500/30">
                         <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
                             <span class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">
-                                문항 ${data.currentQuestionIdx + 1} / ${window.questionBank.length} · [${q.category}]
+                                문제 ${data.currentQuestionIdx + 1} / ${window.questionBank.length} · [${q.category}]
                             </span>
 
                             <div class="flex items-center gap-3">
                                 <div class="text-xs font-bold bg-slate-900/80 px-3 py-1 rounded-xl border border-slate-700/80 flex items-center gap-2">
-                                    <span class="text-slate-400">제출 현황:</span>
+                                    <span class="text-slate-400">투자 현황:</span>
                                     <span class="text-emerald-400 font-black">${submittedCount} / ${totalCount} ${isIndividual ? '명' : '팀'}</span>
                                     <div class="w-16 bg-slate-800 rounded-full h-2 overflow-hidden hidden sm:block">
                                         <div class="bg-emerald-500 h-full transition-all duration-300" style="width: ${(submittedCount / totalCount) * 100}%"></div>
@@ -856,7 +944,7 @@
 
                                 <button onclick="simulateMockSubmissions()" class="px-2.5 py-1 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-300 text-xs rounded-xl font-bold transition flex items-center gap-1">
                                     <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                    <span>모의 제출 시뮬레이션</span>
+                                    <span>모의 투자 시뮬레이션</span>
                                 </button>
                             </div>
                         </div>
@@ -870,7 +958,7 @@
                         ${data.isRevealed ? `
                             <div class="mt-3 p-3.5 rounded-xl border ${q.isTrue ? 'bg-emerald-950/50 border-emerald-500/50 text-emerald-200' : 'bg-rose-950/50 border-rose-500/50 text-rose-200'}">
                                 <div class="flex items-center gap-2 font-black text-lg mb-1">
-                                    <span>판정 결과:</span>
+                                    <span>정답 판정:</span>
                                     <span class="${q.isTrue ? 'text-emerald-400' : 'text-rose-400'}">${q.isTrue ? '⭕ 참 (TRUE)' : '❌ 거짓 (FALSE)'}</span>
                                 </div>
                                 <p class="text-xs md:text-sm font-medium leading-relaxed">${q.explanation}</p>
@@ -888,7 +976,7 @@
                                     <div class="flex justify-between items-center">
                                         <span class="font-bold text-xs text-slate-100 font-title truncate">${t.name}</span>
                                         <span class="text-[10px] px-1.5 py-0.5 rounded font-bold ${isRescueRequested ? 'bg-amber-400 text-slate-950 font-black' : (isZero ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : (t.submitted ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-500'))}">
-                                            ${isRescueRequested ? '🆘 회생요청' : (isZero ? '파산' : (t.submitted ? '제출✓' : '대기'))}
+                                            ${isRescueRequested ? '🆘 회생요청' : (isZero ? '파산' : (t.submitted ? '투자완료✓' : '대기'))}
                                         </span>
                                     </div>
 
@@ -898,13 +986,13 @@
                                             <span class="${isZero ? 'text-rose-400 font-black' : 'text-emerald-400 font-bold'}">${t.points}p</span>
                                         </div>
                                         <div class="flex justify-between text-slate-400">
-                                            <span>입찰</span>
+                                            <span>투자</span>
                                             <span class="text-amber-300 font-bold">${t.submitted ? t.currentBid + 'p' : '-'}</span>
                                         </div>
                                         <div class="flex justify-between text-slate-400">
                                             <span>선택</span>
                                             <span class="font-bold ${t.submitted ? (data.isRevealed ? (t.choice === 'True' ? 'text-emerald-400' : 'text-rose-400') : 'text-indigo-300') : 'text-slate-600'}">
-                                                ${t.submitted ? (data.isRevealed ? (t.choice === 'True' ? '⭕참' : '❌거짓') : '🔒제출') : '-'}
+                                                ${t.submitted ? (data.isRevealed ? (t.choice === 'True' ? '⭕참' : '❌거짓') : '🔒투자') : '-'}
                                             </span>
                                         </div>
                                     </div>
@@ -928,12 +1016,12 @@
                         ${!data.isRevealed ? `
                             <button onclick="revealHostResult()" class="px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black rounded-xl shadow-lg transition text-sm md:text-base font-title flex items-center gap-2">
                                 <i class="fa-solid fa-gavel"></i>
-                                <span>낙찰 발표 & 결과 공개 (${submittedCount}/${totalCount} 제출)</span>
+                                <span>정산 발표 & 결과 공개 (${submittedCount}/${totalCount} 제출)</span>
                             </button>
                         ` : `
                             ${data.currentQuestionIdx < window.questionBank.length - 1 ? `
                                 <button onclick="nextHostQuestion()" class="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-black rounded-xl shadow-lg transition text-sm md:text-base font-title flex items-center gap-2">
-                                    <span>다음 문항 진행</span>
+                                    <span>다음 문제 진행</span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </button>
                             ` : `
@@ -948,7 +1036,6 @@
             `;
         };
 
-        // 📌 교사의 구제 승인 (1회 제한 적용)
         window.approveRescueByHost = function(targetTeamId) {
             playSound('correct');
             var data = window.gameState.roomData;
@@ -957,7 +1044,7 @@
                 var student = data.teams[targetTeamId];
                 if (!student.rescueUsed) {
                     student.points += 40;
-                    student.rescueUsed = true; // 구제 1회 소진 플래그 기록
+                    student.rescueUsed = true;
                     student.rescueRequested = false;
 
                     if (window.db) {
@@ -1076,7 +1163,6 @@
             }
         };
 
-        // 3. 학생 클라이언트 접속
         window.joinClientRoom = async function() {
             playSound('click');
             await window.authReady;
@@ -1195,7 +1281,6 @@
                 window.clientLocalInput.bid = myTeam.currentBid;
             }
 
-            // 교사 연결 끊김 대기
             if (data.hostActive === false) {
                 container.innerHTML = `
                     <div class="max-w-md mx-auto w-full space-y-5 my-auto text-center p-4">
@@ -1208,7 +1293,7 @@
                             </h2>
                             <p class="text-xs text-slate-300 leading-relaxed">
                                 선생님의 인터넷 연결이 잠시 불안정하거나 화면을 재초기화 중입니다.<br>
-                                <strong class="text-emerald-300">경매 데이터는 안전하게 보존되어 있으니 잠시만 기다려 주세요!</strong>
+                                <strong class="text-emerald-300">투자 데이터는 안전하게 보존되어 있으니 잠시만 기다려 주세요!</strong>
                             </p>
                         </div>
                     </div>
@@ -1216,7 +1301,6 @@
                 return;
             }
 
-            // 1) 대기실
             if (data.status === 'waiting') {
                 container.innerHTML = `
                     <div class="max-w-md mx-auto w-full space-y-5 my-auto text-center p-4">
@@ -1236,14 +1320,14 @@
 
                             <div class="bg-slate-950/70 p-4 rounded-2xl border border-slate-800 text-left space-y-2">
                                 <div class="text-xs text-amber-300 font-bold flex items-center gap-1.5">
-                                    <i class="fa-solid fa-coins"></i> 초기 경매 자본: <span class="text-emerald-400 font-black text-sm">${myTeam.points} pt</span>
+                                    <i class="fa-solid fa-coins"></i> 초기 투자 자본: <span class="text-emerald-400 font-black text-sm">${myTeam.points} pt</span>
                                 </div>
                                 <div class="text-xs text-amber-300 font-bold flex items-center gap-1.5">
                                     <i class="fa-solid fa-shield-halved"></i> 보유 보안관 찬스: <span class="text-amber-400 font-black text-sm">${myTeam.sheriffChances}회</span>
                                 </div>
                                 <hr class="border-slate-800 my-2">
                                 <p class="text-xs text-slate-400 leading-relaxed">
-                                    💡 선생님이 스크린 화면에서 <span class="text-emerald-300 font-bold">'경매 시작하기'</span>를 누르면 첫 번째 퀴즈 문항이 나타납니다.
+                                    💡 선생님이 스크린 화면에서 <span class="text-amber-300 font-bold">'입자 문제 투자 시작하기'</span>를 누르면 첫 번째 문제가 나타납니다.
                                 </p>
                             </div>
 
@@ -1257,7 +1341,6 @@
                 return;
             }
 
-            // 2) 디브리핑/종료
             if (data.status === 'debriefing') {
                 var teamsList = Object.values(data.teams).sort(function(a, b) { return b.points - a.points; });
                 var myRank = teamsList.findIndex(function(t) { return t.id === myTeamId; }) + 1;
@@ -1268,7 +1351,7 @@
                             <div class="inline-block bg-amber-500/20 text-amber-400 p-3 rounded-2xl border border-amber-400/30">
                                 <i class="fa-solid fa-trophy text-4xl"></i>
                             </div>
-                            <h2 class="text-2xl font-black font-title text-amber-300">경매 종료!</h2>
+                            <h2 class="text-2xl font-black font-title text-amber-300">투자 종료!</h2>
                             <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-2">
                                 <div class="text-xs text-slate-400">${myTeam.name}의 최종 결과</div>
                                 <div class="text-3xl font-black text-amber-300 font-title">${myRank}위</div>
@@ -1281,7 +1364,6 @@
                 return;
             }
 
-            // 3) 퀴즈 경매 진행 중
             var q = window.questionBank[data.currentQuestionIdx];
             var currentChoice = window.clientLocalInput.choice;
             var currentBid = window.clientLocalInput.bid || 10;
@@ -1296,14 +1378,14 @@
 
             container.innerHTML = `
                 <div class="max-w-xl mx-auto w-full space-y-4">
-                    <div class="glass-panel rounded-2xl p-4 flex justify-between items-center border-2 border-emerald-500/30">
+                    <div class="glass-panel rounded-2xl p-4 flex justify-between items-center border-2 border-indigo-500/30">
                         <div class="flex items-center gap-2.5">
-                            <span class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-300 font-black flex items-center justify-center text-sm border border-emerald-400/30">
+                            <span class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-300 font-black flex items-center justify-center text-sm border border-indigo-400/30">
                                 ${myTeam.name}
                             </span>
                             <div>
                                 <span class="font-bold text-base text-slate-100 font-title">${myTeam.name}</span>
-                                <div class="text-[11px] text-slate-400">참가 중</div>
+                                <div class="text-[11px] text-slate-400">투자 참여 중</div>
                             </div>
                         </div>
                         <div class="text-right">
@@ -1314,7 +1396,7 @@
 
                     <div class="glass-panel rounded-2xl p-5 text-center space-y-3">
                         <span class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">
-                            문항 ${data.currentQuestionIdx + 1} / ${window.questionBank.length} · [${q.category}]
+                            문제 ${data.currentQuestionIdx + 1} / ${window.questionBank.length} · [${q.category}]
                         </span>
                         <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 my-1">
                             <h2 class="text-base md:text-lg font-bold text-slate-100 leading-relaxed font-title">
@@ -1333,7 +1415,7 @@
                                     <h3 class="text-lg font-black font-title text-amber-300">구제 요청 제출 완료!</h3>
                                     <p class="text-xs text-slate-300 leading-relaxed">
                                         회생 퀴즈를 맞췄습니다!<br>
-                                        선생님이 전면 스크린에서 <strong class="text-amber-400">'지원금 지급'</strong> 버튼을 누르시면 +40 pt를 받고 경매에 복귀합니다.
+                                        선생님이 전면 스크린에서 <strong class="text-amber-400">'지원금 지급'</strong> 버튼을 누르시면 +40 pt를 받고 투자에 복귀합니다.
                                     </p>
                                 </div>
                             ` : `
@@ -1354,14 +1436,14 @@
                         ` : `
                             <div id="clientBiddingForm" class="glass-panel rounded-2xl p-5 space-y-4 border border-indigo-500/30">
                                 <div class="flex justify-between items-center">
-                                    <h3 class="font-bold text-sm text-slate-300 font-title"><i class="fa-solid fa-gavel text-amber-400 mr-2"></i>참/거짓 및 입찰가 선택</h3>
+                                    <h3 class="font-bold text-sm text-slate-300 font-title"><i class="fa-solid fa-gavel text-amber-400 mr-2"></i>참/거짓 및 투자 금액 선택</h3>
                                     <button onclick="clientUseSheriffChance()" id="sheriffBtn" ${myTeam.sheriffChances <= 0 || myTeam.submitted ? 'disabled' : ''} class="px-2.5 py-1.5 rounded-xl border text-xs font-bold transition ${myTeam.sheriffChances > 0 && !myTeam.submitted ? 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/40 text-amber-300 badge-glow' : 'bg-slate-800/50 border-slate-700 text-slate-600 cursor-not-allowed'}">
                                         <i class="fa-solid fa-shield-halved text-amber-400 mr-1"></i>보안관 찬스 (<span id="sheriffCount">${myTeam.sheriffChances}</span>)
                                     </button>
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-3">
-                                    <button onclick="clientSelectChoice('True')" id="btnChoiceTrue" ${myTeam.submitted ? 'disabled' : ''} class="py-3 rounded-2xl font-bold border text-sm transition ${currentChoice === 'True' ? 'bg-emerald-600 border-emerald-400 text-white shadow-lg' : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'}">
+                                    <button onclick="clientSelectChoice('True')" id="btnChoiceTrue" ${myTeam.submitted ? 'disabled' : ''} class="py-3 rounded-2xl font-bold border text-sm transition ${currentChoice === 'True' ? 'bg-indigo-600 border-indigo-400 text-white shadow-lg' : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'}">
                                         ⭕ 참 (True)
                                     </button>
                                     <button onclick="clientSelectChoice('False')" id="btnChoiceFalse" ${myTeam.submitted ? 'disabled' : ''} class="py-3 rounded-2xl font-bold border text-sm transition ${currentChoice === 'False' ? 'bg-rose-600 border-rose-400 text-white shadow-lg' : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'}">
@@ -1371,7 +1453,7 @@
 
                                 <div class="space-y-2 pt-1">
                                     <div class="flex justify-between text-xs text-slate-400">
-                                        <span>입찰 베팅 금액</span>
+                                        <span>문제 투자 금액</span>
                                         <span id="bidValueDisplay" class="text-amber-300 font-black text-sm">${currentBid} pt</span>
                                     </div>
                                     <input type="range" id="bidRangeInput" min="10" max="${Math.max(10, myTeam.points)}" step="5" value="${currentBid}" oninput="clientUpdateBid(this.value)" ${myTeam.submitted ? 'disabled' : ''} class="w-full accent-indigo-500 bg-slate-800 rounded-lg h-2 cursor-pointer">
@@ -1379,7 +1461,7 @@
 
                                 <button onclick="clientSubmitBid()" id="btnSubmitBid" ${!currentChoice ? 'disabled' : ''} class="w-full py-3.5 rounded-xl font-black transition font-title text-base flex items-center justify-center gap-2 ${myTeam.submitted ? 'bg-emerald-700 text-emerald-100 cursor-default' : (currentChoice ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg' : 'bg-slate-800 text-slate-500 cursor-not-allowed')}">
                                     <i class="fa-solid fa-paper-plane"></i>
-                                    <span>${myTeam.submitted ? '입찰 제출 완료 (수정 가능)' : '입찰 제출하기'}</span>
+                                    <span>${myTeam.submitted ? '투자 제출 완료 (수정 가능)' : '투자 확정하기'}</span>
                                 </button>
                             </div>
                         `}
@@ -1389,10 +1471,10 @@
                                 ${ (myTeam.choice === 'True' && q.isTrue) || (myTeam.choice === 'False' && !q.isTrue) ? '🎉' : '💥'}
                             </div>
                             <h3 class="text-xl font-black font-title ${ (myTeam.choice === 'True' && q.isTrue) || (myTeam.choice === 'False' && !q.isTrue) ? 'text-emerald-300' : 'text-rose-300'}">
-                                ${ (myTeam.choice === 'True' && q.isTrue) || (myTeam.choice === 'False' && !q.isTrue) ? '낙찰 성공! 포인트 획득' : '낙찰 실패! 포인트 차감'}
+                                ${ (myTeam.choice === 'True' && q.isTrue) || (myTeam.choice === 'False' && !q.isTrue) ? '투자 성공! 수익 획득' : '투자 실패! 자본금 차감'}
                             </h3>
                             <p class="text-xs text-slate-300">
-                                선생님의 다음 문항 진행을 기다려주세요.
+                                선생님의 다음 문제 정산 진행을 기다려주세요.
                             </p>
                         </div>
                     `}
@@ -1406,7 +1488,7 @@
         };
 
         window.submitRescueAnswer = function(answer) {
-            var isCorrect = (answer === false);
+            var isCorrect = (answer === true);
 
             if (isCorrect) {
                 playSound('correct');
@@ -1422,10 +1504,10 @@
                 } else {
                     window.renderClientDashboard();
                 }
-                window.showToast("✅ 회생 퀴즈 정답! 선생님에게 구제 신청이 제출되었습니다.");
+                window.showToast("✅ 회생 퀴즈 정답! 선생님에게 지원금 신청이 제출되었습니다.");
             } else {
                 playSound('wrong');
-                window.showToast("❌ 오답입니다! 상태 변화 시 입자 자체의 크기/종류는 절대 변하지 않습니다. 다시 풀어보세요.");
+                window.showToast("❌ 오답입니다! 액체 표면에서 입자가 공기 중으로 날아가는 현상은 증발입니다. 다시 도전하세요.");
             }
         };
 
@@ -1439,7 +1521,7 @@
 
             if (btnTrue && btnFalse) {
                 if (choice === 'True') {
-                    btnTrue.className = 'py-3 rounded-2xl font-bold border text-sm transition bg-emerald-600 border-emerald-400 text-white shadow-lg';
+                    btnTrue.className = 'py-3 rounded-2xl font-bold border text-sm transition bg-indigo-600 border-indigo-400 text-white shadow-lg';
                     btnFalse.className = 'py-3 rounded-2xl font-bold border text-sm transition bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800';
                 } else {
                     btnTrue.className = 'py-3 rounded-2xl font-bold border text-sm transition bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800';
@@ -1546,7 +1628,6 @@
             }
         };
 
-        // 4. 최종 디브리핑 리포트 (지원금 수령 여부 함께 표시)
         window.renderDebriefingViewHost = function() {
             playSound('correct');
             var data = window.gameState.roomData;
@@ -1561,12 +1642,12 @@
 
             container.innerHTML = `
                 <div class="max-w-4xl mx-auto w-full space-y-6 my-auto py-4">
-                    <div class="glass-panel rounded-3xl p-6 text-center glow-effect border-2 border-amber-500/40 space-y-2">
-                        <div class="inline-block bg-amber-500/20 text-amber-400 p-3 rounded-2xl border border-amber-400/30">
+                    <div class="glass-panel rounded-3xl p-6 text-center glow-effect border-2 border-indigo-500/40 space-y-2">
+                        <div class="inline-block bg-indigo-500/20 text-indigo-400 p-3 rounded-2xl border border-indigo-400/30">
                             <i class="fa-solid fa-trophy text-4xl"></i>
                         </div>
-                        <h2 class="text-3xl font-black font-title text-amber-300">최종 경매 결과 & 오개념 디브리핑</h2>
-                        <p class="text-sm text-slate-300">1학기 과학 개념 검증 완수를 축하합니다!</p>
+                        <h2 class="text-3xl font-black font-title text-indigo-300">최종 투자 결과 & 입자 디브리핑</h2>
+                        <p class="text-sm text-slate-300">중1 과학 입자의 운동과 증발 탐구 학습 완수를 축하합니다!</p>
                     </div>
 
                     <div class="glass-panel rounded-3xl p-6 space-y-4">
@@ -1597,7 +1678,7 @@
                         </div>
                     </div>
 
-                    <button onclick="finishClassAndClear()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-xl transition text-base font-title">
+                    <button onclick="finishClassAndClear()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black rounded-2xl shadow-xl transition text-base font-title">
                         수업 완수 및 메인으로 돌아가기
                     </button>
                 </div>
@@ -1605,7 +1686,7 @@
         };
 
         window.finishClassAndClear = function() {
-            localStorage.removeItem('particle_auction_host_pin');
+            localStorage.removeItem('particle_investment_pin');
             if (window.hostPingInterval) clearInterval(window.hostPingInterval);
             if (window.roomUnsubscribe) {
                 window.roomUnsubscribe();
@@ -1617,7 +1698,6 @@
             window.renderRoleSelection();
         };
 
-        // DOM 준비 후 초기화
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', window.initApp);
         } else {
